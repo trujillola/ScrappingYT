@@ -13,7 +13,6 @@ from dataclasses import dataclass
 import requests
 from bs4 import BeautifulSoup
 
-
 @dataclass
 class Video:
 
@@ -34,19 +33,19 @@ class Video:
         self.links = links
         self.comments = comments
 
-
-
 @dataclass
 class Scrapper :
 
     list_id_vid : list
 
     def __init__(self,list_id_vid) -> None:
-
         self.list_id_vid = list_id_vid
 
-    def get_list_id_vid(self):
-        return self.list_id_vid
+    def _get_list_id_vid(self):
+        return self._list_id_vid
+
+    def _set_list_id_vid(self, val):
+        self._list_id_vid = val
 
     def find_title(self, soup):
         try :
@@ -68,7 +67,7 @@ class Scrapper :
         except :
             res = ""
         return res
-        
+
     def find_links(self, description):
         return re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', description)
 
@@ -100,13 +99,17 @@ class Scrapper :
             videos.append(Video(id,title,author,int(likes),description, links, comments))
        
         return videos
+    list_id_vid = property(
+        fget = _get_list_id_vid,
+        fset = _set_list_id_vid
+    )
 
 
 @dataclass
 class FilesManager :
 
     input_file : str
-    output_file :str
+    output_file : str
 
     def __init__(self, input_file, output_file) -> None:
             self.input_file = input_file
@@ -114,49 +117,49 @@ class FilesManager :
 
     def read(self) :
         print("Reading file.")
-        f = open(input_file)
-        data = json.load(f)
-        f.close()
+        with open(self.input_file,"r") as f :
+            data = json.load(f)
         return data
 
     def save(self,data,videos) :
         print('Saving data.') 
         dict_videos = dict(zip(data,list(map(lambda x : x.__dict__, videos))))
 
-        with open(output_file, "w") as outfile:
+        with open(self.output_file, "w") as outfile:
             json.dump(dict_videos, outfile, indent = 4)
 
 
 
-
-if __name__ == "__main__" :
-
-    if len(sys.argv) == 5 :
-
-        if sys.argv[1] == "--input" and sys.argv[3] == "--output" :
-            input_file = sys.argv[2]
-            output_file = sys.argv[4]
-        elif sys.argv[1] == "--output" and sys.argv[3] == "--input" :
-            input_file = sys.argv[4]
-            output_file = sys.argv[2]
+def main(argv) : 
+    if len(argv) == 5 :
+        if argv[1] == "--input" and argv[3] == "--output" :
+            input_file = argv[2]
+            output_file = argv[4]
+        elif argv[1] == "--output" and argv[3] == "--input" :
+            input_file = argv[4]
+            output_file = argv[2]
         else : 
-            print("WRONG ARGUMENTS")
-            exit()
+            exit("WRONG ARGUMENTS")
 
         if os.path.isfile(os.path.abspath(os.getcwd())+'/'+ str(input_file)) :    
             print('Launching.')
-
+            print(input_file)
             fileManager = FilesManager(input_file, output_file)
-           
+            
             # Start scrapping
             scrapper = Scrapper(fileManager.read()["videos_id"])
             videos = scrapper.scrap()
 
             # Create a dictionnary from array 
-            fileManager.save(scrapper.get_list_id_vid(),videos)
+            fileManager.save(scrapper.list_id_vid,videos)
 
             print('Job done.')
         else : 
-            print("INPUT FILE DOESN'T EXIST")
+            exit("INPUT FILE DOESN'T EXIST")
     else :
-        print("WRONG NUMBER OF PARAMETERS")
+        exit("WRONG NUMBER OF PARAMETERS")
+    return 1
+
+if __name__ == "__main__" :
+    main(sys.argv)
+   

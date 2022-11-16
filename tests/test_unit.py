@@ -1,3 +1,8 @@
+import os
+import sys
+
+sys.path.append('.')
+sys.path.append('../')
 import unittest
 
 import pytest
@@ -6,7 +11,44 @@ from bs4 import BeautifulSoup
 
 import scrapper as sc
 
-# Tests de la classe Scrapper :
+# Test command line
+class TestMain(unittest.TestCase) :
+
+    #Test constructor
+    def test_init(self):
+        argv = ['scrapper.py', '--output', 'outputtest.json', '--input', 'inputtest.json']
+        self.assertEqual(sc.main(argv), 1)
+
+# Test File manager :
+
+class TestFileManager(unittest.TestCase) :
+
+    #Test constructor
+    def test_init(self):
+        input_file = "inputtest.json"
+        output_file = "outputtest.json"
+        manager = sc.FilesManager(input_file, output_file)
+        self.assertEqual(manager.input_file, input_file)
+        self.assertEqual(manager.output_file, output_file)
+
+    # Test read
+    def test_read(self):
+        input_file = "inputtest.json"
+        output_file = "outputtest.json"
+        data = sc.FilesManager("inputtest.json", output_file).read()
+        self.assertEqual(data,{'videos_id' : ['fmsoym8I-3o', 'JhWZWXvN_yo']})            
+
+    # Test save
+    def test_save(self):
+        data = {'videos_id' : ['fmsoym8I-3o', 'JhWZWXvN_yo']}
+        videos = [sc.Video(id='fmsoym8I-3o', title='Pierre Niney : L’interview face cachée par HugoDécrypte', author='HugoDécrypte', likes=0, description="🍿 L'acteur Pierre Niney est dans L’interview face cachée ! Ces prochains mois, le format revient plus fort avec des artistes, sportifs, etc.🔔 Abonnez-vous ...", links=[], comments=[]), sc.Video(id='JhWZWXvN_yo', title='ELISE LUCET EST SUB CHEZ MOI ?! (Débrief Cash Investigation)', author='ZeratoR', likes=0, description='ABONNE TOI, par pitié : https://www.youtube.com/user/ZeratoRSC2/?sub_confirmation=1Retrouvez-moi en live sur : https://www.twitch.tv/zeratorVOD du live : htt...', links=['https://www.youtube.com', 'https://www.twitch.tv'], comments=[])]
+        input_file = "inputtest.json"
+        output_file = "outputtest.json"
+        sc.FilesManager(input_file, output_file).save(data,videos)
+        self.assertTrue(os.path.exists(output_file) and os.path.getsize(output_file)!=0)            
+
+
+# Tests Scrapper :
 
 class TestScrapper(unittest.TestCase) : 
 
@@ -52,8 +94,6 @@ class TestScrapper(unittest.TestCase) :
         req = requests.get("https://www.youtube.com/watch?v=JhWZWXvN_yo")
         soup = BeautifulSoup(req.content, 'html.parser')
         desc = sc.Scrapper(data["videos_id"]).find_description(soup)
-        print(desc)
-        print("ABONNE TOI, par piti\u00e9 : https://www.youtube.com/user/ZeratoRSC2/?sub_confirmation=1Retrouvez-moi en live sur : https://www.twitch.tv/zeratorVOD du live : htt...")
         self.assertEqual(desc,"ABONNE TOI, par piti\u00e9 : https://www.youtube.com/user/ZeratoRSC2/?sub_confirmation=1Retrouvez-moi en live sur : https://www.twitch.tv/zeratorVOD du live : htt...")
 
     def test_find_description_null(self):
@@ -76,8 +116,14 @@ class TestScrapper(unittest.TestCase) :
         links = sc.Scrapper(data["videos_id"]).find_links(description)
         self.assertEqual(links, [])
 
+    # Test Scrap
+    def test_find_scrap(self):
+        data = { "videos_id" : ["fmsoym8I-3o","JhWZWXvN_yo","vcORt-798EU","dV360CxA2BQ","000000"]}
+        result = sc.Scrapper(data["videos_id"]).scrap()
+        self.assertEqual(len(result), len(data["videos_id"]))
 
 
-#test ligne de commande
 
-#Test des conditions
+
+# Test conditions
+
