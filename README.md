@@ -28,6 +28,6 @@ Some tests use the file inputtest.json. Hence, they will fail if the file is mod
 
 I have tested the code with input.json that contains only a few YT ids and the execution time was already long. 
 
-## Fichier output
+## Output file
 
 The result is saved in a json output file.  
