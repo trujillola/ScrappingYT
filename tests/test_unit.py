@@ -108,7 +108,8 @@ class TestScrapper(unittest.TestCase) :
         data = { "videos_id" : [ "JhWZWXvN_yo"] }
         description =  "ABONNE TOI, par piti\u00e9 : https://www.youtube.com/user/ZeratoRSC2/?sub_confirmation=1Retrouvez-moi en live sur : https://www.twitch.tv/zeratorVOD du live : htt..."
         links = sc.Scrapper(data["videos_id"]).find_links(description)
-        self.assertEqual(links,["https://www.youtube.com","https://www.twitch.tv"])
+        print(links)
+        self.assertEqual(links,['https://www.youtube.com/user/ZeratoRSC2/?sub_confirmation=1Retrouvez-moi', 'https://www.twitch.tv/zeratorVOD'])
 
     def test_find_links_null(self):
         data = { "videos_id" : [ "000000"] }

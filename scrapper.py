@@ -69,7 +69,8 @@ class Scrapper :
         return res
 
     def find_links(self, description):
-        return re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', description)
+        #re.search("(?P<url>https?://[^\s]+)", myString).group("url")
+        return re.findall('(?P<url>https?://[^\s]+)', description)
 
     # def find_comments(self, soup):
     #     
