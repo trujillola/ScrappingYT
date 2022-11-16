@@ -20,27 +20,6 @@
         ],
         "comments": []
     },
-    "p0IGBhFMsCM": {
-        "id": "p0IGBhFMsCM",
-        "title": "Self-Portrait Day 2022",
-        "author": "art tutorial",
-        "likes": 0,
-        "description": "November 1st is international self-portrait day and this is my 11th anniversary of making a youtube video about it!  Do a self-portrait today and enjoy the v...",
-        "links": [],
-        "comments": []
-    },
-    "y2iC4rCI01w": {
-        "id": "y2iC4rCI01w",
-        "title": "John Parish, PJ Harvey - Is That All There Is?",
-        "author": "John",
-        "likes": 0,
-        "description": "Order the \u2018Dance Hall At Louse Point' vinyl reissue:https://PjHarvey.lnk.to/DHALP-VinylListen to the Best of PJ Harvey: https://PJHarvey.lnk.to/PlaylistsID F...",
-        "links": [
-            "https://PjHarvey.lnk.to",
-            "https://PJHarvey.lnk.to"
-        ],
-        "comments": []
-    },
     "vcORt-798EU": {
         "id": "vcORt-798EU",
         "title": "I\u2019ve Seen It All",
@@ -56,6 +35,15 @@
         "author": "lord of the rings",
         "likes": 0,
         "description": "Lord of the Rings: The Rings of Power Season 1 viewer numbers were said to be 25 million by Amazon Prime video. But now the viewer minutes have been released...",
+        "links": [],
+        "comments": []
+    },
+    "000000": {
+        "id": "000000",
+        "title": "",
+        "author": "",
+        "likes": 0,
+        "description": "",
         "links": [],
         "comments": []
     }
